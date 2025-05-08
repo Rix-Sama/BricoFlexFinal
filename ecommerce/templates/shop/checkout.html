@@ -1,0 +1,136 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg mb-4">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2><i class="fas fa-credit-card"></i> Paiement sécurisé</h2>
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                        <div class="alert alert-danger text-center">{{ error }}</div>
+                    {% endif %}
+                    <div class="mb-4">
+                        <h4 class="text-center"><i class="fas fa-shopping-basket"></i> Votre commande</h4>
+                        <ul class="list-group mb-3">
+                            {% if panier %}
+                                {% for item in panier %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <i class="fas fa-box-open text-secondary"></i>
+                                            <strong>{{ item.produit.title }}</strong>
+                                            <span class="badge badge-primary ml-2">QTE : {{ item.quantite }}</span>
+                                        </span>
+                                        <span>
+                                            <span class="badge badge-warning">{{ item.produit.price }} DH</span>
+                                            <span class="badge badge-success">{{ item.total_ligne|floatformat:2 }} DH</span>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <b class="text-danger"><i class="fas fa-coins"></i> Total</b>
+                                    <span class="badge badge-danger badge-pill">{{ total }} DH</span>
+                                </li>
+                            {% else %}
+                                <li class="list-group-item text-center">Votre panier est vide.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <form id="commande-form" method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="nom"><i class="fas fa-user"></i> Nom</label>
+                                <input type="text" id="nom" name="nom" class="form-control" placeholder="Votre nom" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="exemple@email.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address"><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Votre adresse complète" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="ville"><i class="fas fa-city"></i> Ville</label>
+                                <input type="text" name="ville" id="ville" class="form-control" placeholder="Ville" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="pays"><i class="fas fa-flag"></i> Pays</label>
+                                <select id="pays" name="pays" class="form-control" required>
+                                    <option value="Maroc" selected>Maroc</option>
+                                    <option value="France">France</option>
+                                    <option value="Belgique">Belgique</option>
+                                    <option value="Espagne">Espagne</option>
+                                    <option value="Egypte">Egypte</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="zipcode"><i class="fas fa-mail-bulk"></i> Code postal</label>
+                                <input name="zipcode" id="zipcode" type="text" class="form-control" placeholder="20000" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="total"><i class="fas fa-money-bill-wave"></i> Somme totale à payer</label>
+                            <input name="total" id="total" value="{{ total }}" readonly class="bg-dark text-warning form-control">
+                        </div>
+                        <input type="hidden" name="items" value="{{ panier|safe }}">
+                        <button type="submit" class="btn btn-success btn-block btn-lg mt-3" id="valider-commande-btn">
+                            <i class="fas fa-check-circle"></i> Valider la commande
+                        </button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <h5><i class="fas fa-lock"></i> Paiement sécurisé avec PayPal</h5>
+                        <div id="paypal-button-container"></div>
+                    </div>
+                    <div class="alert alert-info mt-4 text-center">
+                        <i class="fas fa-shield-alt"></i> Vos informations sont protégées et le paiement est 100% sécurisé.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=EUR"></script>
+    <script>
+    document.getElementById('commande-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        var formData = new FormData(form);
+        fetch("", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+        .then(response => response.ok ? response.text() : Promise.reject(response))
+        .then(data => {
+            // Après validation et enregistrement de la commande, lancer la création de la commande PayPal
+            fetch("{% url 'create_paypal_order' %}", {
+                method: 'post',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'total={{ total }}'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.approval_url) {
+                    window.location.href = data.approval_url;
+                } else {
+                    alert("Erreur lors de la création de la commande PayPal.");
+                }
+            });
+        })
+        .catch(error => {
+            alert("Erreur lors de la validation de la commande.");
+        });
+    });
+    </script>
+</div>
+{% endblock %}
