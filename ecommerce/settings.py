@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.panier_count',
+                'shop.context_processors.categories_list',
             ],
         },
     },
@@ -128,8 +129,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-AUTH_USER_MODEL = 'users.Client'
-AUTH_USER_MODEL = 'users.Admin'
+AUTH_USER_MODEL = 'users.User'
+
 
 LOGIN_REDIRECT_URL = '/profil/'
 

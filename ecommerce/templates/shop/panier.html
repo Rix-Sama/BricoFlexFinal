@@ -21,9 +21,15 @@
                         <strong>{{ item.produit.title }}</strong><br>
                         <small class="text-muted">{{ item.produit.description|truncatechars:50 }}</small>
                     </td>
-                    <td class="text-center align-middle">{{ item.quantite }}</td>
-                    <td class="text-center align-middle">{{ item.produit.price }} DH</td>
-                    <td class="text-center align-middle">{{ item.produit.price|floatformat:2|default:"0.00" |add:item.quantite|default:"0" }}</td>
+                    <td class="text-center align-middle">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a href="{% url 'decrementer_quantite' item.produit.id %}" class="btn btn-sm btn-outline-secondary mr-2">-</a>
+                            <span>{{ item.quantite }}</span>
+                            <a href="{% url 'incrementer_quantite' item.produit.id %}" class="btn btn-sm btn-outline-secondary ml-2">+</a>
+                        </div>
+                    </td>
+                    <td class="text-center align-middle">{{ item.produit.price|floatformat:2|default:"0.00" }} DH</td>
+                    <td class="text-center align-middle">{{ item.total_ligne|floatformat:2|default:"0.00" }} DH</td>
                     <td class="text-center align-middle">
                         <a href="{% url 'retirer_du_panier' item.produit.id %}" class="btn btn-sm btn-danger">
                             <i class="fas fa-trash-alt"></i> Retirer
@@ -43,6 +49,9 @@
     <div class="text-right">
         <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">
             <i class="fas fa-credit-card"></i> Passer à la caisse
+        </a>
+        <a href="{% url 'location' %}" class="btn btn-primary btn-lg {% if user.profile.nombre_commandes < 5 %}disabled{% endif %}">
+            <i class="fas fa-calendar-alt"></i> Louer
         </a>
     </div>
     {% else %}

@@ -1,13 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Admin, Client
+from .models import User
 
-class AdminCreationForm(UserCreationForm):
+class UserCreationFormCustom(UserCreationForm):
     class Meta:
-        model = Admin
-        fields = ('email', 'username', 'telephone')  # adapte selon ton modèle
-
-class ClientCreationForm(UserCreationForm):
-    class Meta:
-        model = Client
-        fields = ('email', 'username', 'telephone', 'adresse', 'ville', 'pays', 'code_postal')
+        model = User
+        fields = ('email', 'username', 'telephone')

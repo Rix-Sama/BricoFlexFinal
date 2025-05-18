@@ -1,19 +1,9 @@
 from django.contrib import admin
-from .models import Admin, Client
+from .models import User
 
-class AdminAdmin(admin.ModelAdmin):
-    list_display = ('email', 'username', 'telephone', 'date_inscription', 'date_connexion', 'is_active')
-    search_fields = ('email', 'username', 'telephone')
-    list_filter = ('is_active', 'date_inscription')
-    readonly_fields = ('date_inscription', 'date_connexion')
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'is_staff', 'is_active')
+    search_fields = ('email',)
+    list_filter = ('is_staff', 'is_active')
 
-admin.site.register(Admin, AdminAdmin)
-
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ('email', 'username', 'telephone', 'ville', 'pays', 'date_inscription', 'is_active')
-    search_fields = ('email', 'username', 'telephone', 'ville')
-    list_filter = ('is_active', 'ville', 'pays', 'date_inscription')
-    readonly_fields = ('date_inscription', 'date_connexion')
-
-admin.site.register(Client, ClientAdmin)
-from .models import Admin, Client
+admin.site.register(User, UserAdmin)

@@ -21,7 +21,7 @@
     {{ product.description }}
      </div>
     <div>
-        <form method="post" action="{% url 'ajouter_au_panier' product.id %}">
+        <form method="post" action="{% url 'ajouter_au_panier' product.id %}" class="add-to-cart-form" data-product-id="{{ product.id }}">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Ajouter au panier</button>
         </form>

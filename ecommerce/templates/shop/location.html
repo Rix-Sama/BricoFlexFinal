@@ -1,0 +1,15 @@
+{% extends 'shop/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary"><i class="fas fa-calendar-alt"></i> Louer un produit</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="jours">Nombre de jours de location :</label>
+            <input type="number" class="form-control" id="jours" name="jours" required>
+        </div>
+        <!-- Ajouter d'autres champs si nécessaire -->
+        <button type="submit" class="btn btn-primary">Confirmer la location</button>
+    </form>
+</div>
+{% endblock %}

@@ -5,7 +5,7 @@ from .models import category, product , Commande
 
 
 # Register your models here.
-admin.site.site_header= 'E-commerce'
+admin.site.site_header= 'ECommerce'
 admin.site.site_title= 'Gestion BricoFlax'
 admin.site.index_title= 'Manager'
 
