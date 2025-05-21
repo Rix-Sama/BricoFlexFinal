@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, detail, checkout, confirmation, profil, ajouter_au_panier, retirer_du_panier, afficher_panier, location
+from .views import index, detail, checkout, confirmation, profil, ajouter_au_panier, retirer_du_panier, afficher_panier
 from django.contrib.auth.views import LogoutView
 from . import views
 from django.conf import settings
@@ -20,7 +20,8 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('decrementer-quantite/<int:produit_id>/', decrementer_quantite, name='decrementer_quantite'),
     path('incrementer-quantite/<int:produit_id>/', incrementer_quantite, name='incrementer_quantite'),
-     path('location/', location, name='location'),
+   
+    
 ]
 
 if settings.DEBUG:

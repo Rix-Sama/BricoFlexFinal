@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from .forms import UserAuthenticationForm
-
+from .models import Commande 
 def login_view(request):
     if request.method == "POST":
         form = UserAuthenticationForm(request, data=request.POST)
@@ -27,13 +27,16 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponseBadRequest
 
 def index(request):
-    product_object = product.objects.all()
     item_name = request.GET.get('item-name')
-    if item_name != '' and item_name is not None:
+    if item_name:
         product_object = product.objects.filter(title__icontains=item_name)
-    paginator= Paginator(product_object, 4)
+    else:
+        product_object = product.objects.all()
+    
+    paginator = Paginator(product_object, 4)  # Paginer les résultats, 4 produits par page
     page = request.GET.get('page')
     product_object = paginator.get_page(page)
+    
     return render(request, 'shop/index.html', {'product_object': product_object})
 
 def detail(request, myid):
@@ -268,21 +271,4 @@ def home(request):
     product_object = paginator.get_page(page)
     
     return render(request, 'shop/index.html', {'product_object': product_object})
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-
-@login_required
-def location(request):
-    # Vérifier si l'utilisateur est un administrateur
-    if not request.user.is_staff and request.user.profile.nombre_commandes < 5:
-        return redirect('afficher_panier')  # Rediriger si l'utilisateur n'a pas assez de commandes et n'est pas administrateur
-
-    if request.method == 'POST':
-        # Traiter le formulaire de location
-        jours = request.POST.get('jours')
-        # ... Traiter les autres informations de location ...
-        return redirect('confirmation_location')  # Rediriger après traitement
-
-    return render(request, 'shop/location.html')
-from django.shortcuts import render
 

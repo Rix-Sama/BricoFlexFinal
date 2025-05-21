@@ -3,34 +3,29 @@
 {% load static %}
 {% block content %}
 
-<div class="row">
-    <div class="col-md-6">
-        <div>
-            <img src="{{ product.image.url }}"  width="500px" height="500px"  alt="" > 
+<div class="container mt-5" style="max-width: 800px;">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}" style="border-radius: 0.5rem;">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="text-dark display-4 font-weight-bold mb-3">{{ product.title }}</h1>
+                <h2 class="text-success mb-4">{{ product.price }} €</h2>
+                <p class="card-text text-muted mb-4">{{ product.description }}</p>
+                <form method="post" action="{% url 'ajouter_au_panier' product.id %}" class="add-to-cart-form" data-product-id="{{ product.id }}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary btn-lg btn-block">Ajouter au panier</button>
+                </form>
+                <div class="mt-4">
+                    <strong>Articles dans le panier :</strong> <span class="badge badge-pill badge-secondary">{{ panier_count }}</span>
+                </div>
+            </div>
         </div>
     </div>
-<div class="col-md-6">
-    <div class="text-warning display-3">
-        {{ product.title }}
-    </div>
-<div>
-    <div class="text-danger" >
-        {{ product.price }} 
-    </div>
-    <div>
-    {{ product.description }}
-     </div>
-    <div>
-        <form method="post" action="{% url 'ajouter_au_panier' product.id %}" class="add-to-cart-form" data-product-id="{{ product.id }}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Ajouter au panier</button>
-        </form>
-    </div>
-    <div class="mt-3">
-        <strong>Articles dans le panier :</strong> {{ panier_count }}
-    </div>
 </div>
-
 
 {% endblock %}
 

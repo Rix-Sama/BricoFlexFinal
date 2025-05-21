@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
+import uuid
 
 # Create your models here.
 class category(models.Model):
@@ -29,7 +30,8 @@ class product(models.Model):
     
 
 class Commande(models.Model):
-    items=  models.CharField(max_length=200)
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)
+    items = models.CharField(max_length=200)
     total = models.FloatField(max_length=200)
     nom = models.CharField(max_length=150)
     email = models.EmailField()
@@ -40,8 +42,7 @@ class Commande(models.Model):
     date_commande = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-date_commande']    
-
+        ordering = ['-date_commande']
 
     def __str__(self):
         return self.nom

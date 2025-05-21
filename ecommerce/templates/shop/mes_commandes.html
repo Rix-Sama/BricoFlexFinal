@@ -1,0 +1,16 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Mes Commandes</h2>
+    <div class="list-group">
+        {% for commande in commandes %}
+            <a href="#" class="list-group-item list-group-item-action">
+                Commande #{{ commande.id }} - {{ commande.date }} - {{ commande.status }}
+            </a>
+        {% empty %}
+            <p class="text-center">Vous n'avez pas encore passé de commande.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -12,31 +12,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
-                            <p><strong>Prénom :</strong> {{ user.first_name }}</p>
-                            <p><strong>Nom :</strong> {{ user.last_name }}</p>
                             <p><strong>Email :</strong> {{ user.email }}</p>
-                            <p><strong>Date d'inscription :</strong> {{ user.date_joined|date:"d/m/Y H:i" }}</p>
                             <p><strong>Dernière connexion :</strong> {{ user.last_login|date:"d/m/Y H:i" }}</p>
                             <p><strong>Statut :</strong> {% if user.is_active %}Actif{% else %}Inactif{% endif %}</p>
                             <p><strong>Superutilisateur :</strong> {% if user.is_superuser %}Oui{% else %}Non{% endif %}</p>
-                            <p><strong>Groupes :</strong>
-                                {% if user.groups.all %}
-                                    {% for group in user.groups.all %}
-                                        {{ group.name }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    Aucun
-                                {% endif %}
-                            </p>
-                            <p><strong>Permissions :</strong>
-                                {% if user.user_permissions.all %}
-                                    {% for perm in user.user_permissions.all %}
-                                        {{ perm.name }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    Aucune
-                                {% endif %}
-                            </p>
+ 
                             <p><strong>Nombre de commandes :</strong> {{ user.profile.nombre_commandes }}</p>
                         </div>
                         <div class="col-md-6">

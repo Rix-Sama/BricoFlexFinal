@@ -4,16 +4,43 @@
 <!-- Barre de recherche sur toute la largeur -->
 <div class="row">
     <div class="col-12 mt-4 mb-3">
-        <form method="get" action="{% url 'home' %}" class="input-group shadow-sm w-100">
-            <input type="text" name="q" class="form-control form-control-lg rounded-pill" placeholder="Rechercher un produit..." aria-label="Rechercher un produit">
-            <div class="input-group-append">
-                <button class="btn btn-primary rounded-pill px-4" type="submit">
-                    <i class="fas fa-search"></i> Rechercher
-                </button>
-            </div>
+        <form method="get" action="{% url 'home' %}" class="search-form">
+            <input type="text" name="item-name" class="form-control search-input" placeholder="Rechercher un produit" value="{{ request.GET.item_name }}">
+            <button type="submit" class="btn btn-primary search-button">Rechercher</button>
         </form>
     </div>
 </div>
+<style>
+    .search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-input {
+    width: 70%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.search-button {
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+</style>
     <!-- Zone d'affichage du message -->
     <div id="add-to-cart-message" class="alert alert-success text-center" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999;">
         Le produit a bien été ajouté au panier !

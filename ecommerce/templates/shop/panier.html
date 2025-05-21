@@ -46,11 +46,25 @@
             {{ total }} DH
         </div>
     </div>
+    <div id="location-form" class="mt-4" style="display: none;">
+        <h4>Informations de location</h4>
+        <form id="form-location">
+            <div class="form-group">
+                <label for="jours">Nombre de jours de location :</label>
+                <input type="number" class="form-control" id="jours" name="jours" required>
+            </div>
+            <div class="form-group">
+                <label for="prix_location">Prix de location :</label>
+                <input type="text" class="form-control" id="prix_location" name="prix_location" readonly>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirmer la location</button>
+        </form>
+    </div>
     <div class="text-right">
         <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">
             <i class="fas fa-credit-card"></i> Passer à la caisse
         </a>
-        <a href="{% url 'location' %}" class="btn btn-primary btn-lg {% if user.profile.nombre_commandes < 5 %}disabled{% endif %}">
+        <a href="#" id="louer-btn" class="btn btn-primary btn-lg {% if user.profile.nombre_commandes < 5 %}disabled{% endif %}">
             <i class="fas fa-calendar-alt"></i> Louer
         </a>
     </div>
@@ -61,4 +75,22 @@
     {% endif %}
     <a href="{% url 'home' %}">Continuer vos achats</a>
 </div>
+
+<script>
+document.getElementById('louer-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('location-form').style.display = 'block';
+});
+
+document.getElementById('jours').addEventListener('input', function() {
+    var prixProduit = {{ total }}; // Assurez-vous que 'total' est bien défini dans le contexte
+    var jours = parseInt(this.value);
+    if (isNaN(jours) || jours <= 0) {
+        document.getElementById('prix_location').value = '0.00 DH';
+        return;
+    }
+    var prixLocation = (prixProduit * 0.10) * jours;
+    document.getElementById('prix_location').value = prixLocation.toFixed(2) + ' DH';
+});
+</script>
 {% endblock %}
